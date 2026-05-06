@@ -1,0 +1,21 @@
+name: drip
+description: "DRIP — Real Drink Specials Near You."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  audioplayers: ^6.1.0
+  share_plus: ^10.0.0
+  google_maps_flutter: ^2.12.3
+  url_launcher: ^6.3.0
+  speech_to_text: ^7.3.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/    
