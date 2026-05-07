@@ -17,5 +17,22 @@ dependencies:
 
 flutter:
   uses-material-design: true
+
   assets:
-    - assets/    
+    # Updated PNG buttons (clean transparent background)
+    - assets/party_button.png
+    - assets/coffee_button.png
+    - assets/smoothie_button.png
+    - assets/drip_logo.png
+    - assets/family_mode_button.png
+    - assets/instant_alerts.png
+    
+    # Still JPG
+    - assets/selfie_share.jpg
+
+    # Audio files
+    - assets/alerts.mp3
+    - assets/coffee.mp3
+    - assets/party.mp3
+    - assets/selfie.mp3
+    - assets/smoothie.mp3
