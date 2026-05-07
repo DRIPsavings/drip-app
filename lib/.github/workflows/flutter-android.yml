@@ -28,18 +28,15 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Install Android SDK + NDK (r28 - recommended for 2026)
+      - name: Install Required NDK (matches build.gradle.kts)
         run: |
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install \
-            "ndk;28.0.12674087" \
-            "build-tools;35.0.0" \
-            "platforms;android-35"
+          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
 
       - name: Get Flutter dependencies
         run: flutter pub get
 
-      - name: Build Debug APK with more details
-        run: flutter build apk --debug --verbose
+      - name: Build Debug APK
+        run: flutter build apk --debug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
