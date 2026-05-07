@@ -26,6 +26,11 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Setup NDK (for Google Maps & Speech)
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26c
+
       - name: Get Flutter dependencies
         run: flutter pub get
 
