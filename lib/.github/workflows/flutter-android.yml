@@ -5,7 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:  # Allows manual trigger from GitHub UI
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,19 +24,22 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 'stable'   # Latest stable (you can pin e.g. '3.29.0' if you prefer)
+          flutter-version: 'stable'
           channel: 'stable'
           cache: true
 
-      - name: Install Android NDK (fixes google_maps_flutter & speech_to_text)
+      - name: Install Android SDK + NDK (r28 - recommended for 2026)
         run: |
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.2.12479018"
+          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install \
+            "ndk;28.0.12674087" \
+            "build-tools;35.0.0" \
+            "platforms;android-35"
 
       - name: Get Flutter dependencies
         run: flutter pub get
 
-      - name: Build Debug APK (with clean .png buttons)
-        run: flutter build apk --debug
+      - name: Build Debug APK with more details
+        run: flutter build apk --debug --verbose
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
