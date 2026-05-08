@@ -2,29 +2,32 @@ name: Flutter Android Build
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.41.x'
           channel: 'stable'
-          cache: true
+
+      - name: Install Android NDK (required version)
+        run: |
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "ndk;27.0.12077973"
 
       - name: Get Flutter dependencies
         run: flutter pub get
@@ -32,17 +35,8 @@ jobs:
       - name: Build Debug APK
         run: flutter build apk --debug
 
-      - name: Build Release APK
-        run: flutter build apk --release
-
-      - name: Upload Debug APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: build/app/outputs/flutter-apk/app-debug.apk
-
-      - name: Upload Release APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: build/app/outputs/flutter-apk/app-release.apk
