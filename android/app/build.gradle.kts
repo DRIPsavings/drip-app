@@ -1,13 +1,7 @@
-plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("dev.flutter.flutter-gradle-plugin")
-}
-
 android {
     namespace = "com.example.drip"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"   // ← This is the key stable version right now
+    ndkVersion = "27.1.12297007"   // This is the important fix
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -31,8 +25,4 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-}
-
-flutter {
-    source = "../.."
 }
