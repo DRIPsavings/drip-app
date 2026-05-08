@@ -1,0 +1,19 @@
+{
+  "name": "Flutter Development",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/flutter:1": {
+      "version": "stable",
+      "androidSdk": true
+    }
+  },
+  "postCreateCommand": "flutter doctor --android-licenses && flutter doctor",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Dart-Code.flutter",
+        "Dart-Code.dart-code"
+      ]
+    }
+  }
+}
