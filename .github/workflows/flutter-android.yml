@@ -13,30 +13,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Setup Java JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
           distribution: 'temurin'
+          java-version: '17'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.41.x'
           channel: 'stable'
+          cache: true
 
-      - name: Install Android NDK (required version)
+      - name: Install Android SDK components & NDK
         run: |
-          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install "ndk;27.0.12077973"
+          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install \
+            "ndk;27.0.12077973" \
+            "build-tools;35.0.0" \
+            "platforms;android-35" \
+            "platform-tools"
 
-      - name: Get Flutter dependencies
+      - name: Get dependencies
         run: flutter pub get
 
       - name: Build Debug APK
         run: flutter build apk --debug
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
+          name: app-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
