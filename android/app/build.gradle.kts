@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.example.drip"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.1.12297007"   // Fixed for google_maps_flutter + speech_to_text
+    ndkVersion = "27.0.12077973"   // Exact version requested
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
