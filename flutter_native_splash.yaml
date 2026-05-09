@@ -1,0 +1,12 @@
+flutter_native_splash:
+  color: "#0A1F3A"                    # Dark teal background
+  image: assets/splash.png            # Your full splash image
+  android_12:
+    image: assets/splash.png
+    color: "#0A1F3A"
+  ios: true
+  web: false
+
+  # Optional: Customize for different themes if needed later
+  # android: true
+  # ios: true
