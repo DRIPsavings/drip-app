@@ -36,3 +36,6 @@ flutter:
     - assets/party.mp3
     - assets/selfie.mp3
     - assets/smoothie.mp3
+
+    # Splash screen
+    - assets/splash.png
