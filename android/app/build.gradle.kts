@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.example.drip"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"   // Exact version requested
+    ndkVersion = "27.0.12077973"   // Hard-pinned as requested by the error
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
