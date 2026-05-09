@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -25,13 +25,10 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Accept licenses & Install exact NDK
+      - name: Accept Android Licenses & Install NDK
         run: |
           echo "y" | flutter doctor --android-licenses
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
-
-      - name: Get dependencies
-        run: flutter pub get
+          flutter pub get
 
       - name: Build Debug APK
         run: flutter build apk --debug
