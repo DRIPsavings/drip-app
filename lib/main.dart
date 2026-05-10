@@ -6,7 +6,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math';
 
-// Import the popup we just created
+// Import the popup
 import 'widgets/drip_tip_popup.dart';
 
 void main() {
@@ -65,35 +65,31 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildBigButton(
-              'party_button.png', 'party.mp3', const CategoryScreen("party")),
+          _buildBigButton('party_button.png', 'party.mp3', const CategoryScreen("party")),
           const SizedBox(height: 12),
-          _buildBigButton('coffee_button.png', 'coffee.mp3',
-              const CategoryScreen("coffee")),
+          _buildBigButton('coffee_button.png', 'coffee.mp3', const CategoryScreen("coffee")),
           const SizedBox(height: 12),
-          _buildBigButton('smoothie_button.png', 'smoothie.mp3',
-              const CategoryScreen("smoothie")),
+          _buildBigButton('smoothie_button.png', 'smoothie.mp3', const CategoryScreen("smoothie")),
           const SizedBox(height: 25),
-          _buildBigButton('instant_alerts.png', 'alerts.mp3',
-              const InstantAlertsUpgradeScreen()),
+          _buildBigButton('instant_alerts.png', 'alerts.mp3', const InstantAlertsUpgradeScreen()),
           const SizedBox(height: 30),
-          _buildBigButton(
-              'family_mode_button.png', null, const FamilyModeScreen()),
+          _buildBigButton('family_mode_button.png', null, const FamilyModeScreen()),
           const SizedBox(height: 30),
+
           ElevatedButton(
             onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (_) => const InstantSavingsScreen())),
+                MaterialPageRoute(builder: (_) => const InstantSavingsScreen())),
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 padding: const EdgeInsets.symmetric(vertical: 18)),
             child: const Text("💰 Instant Savings",
                 style: TextStyle(fontSize: 20)),
           ),
+
           const SizedBox(height: 20),
 
-          // ==================== TEST BUTTON ====================
+          // Test Tip Popup Button
           ElevatedButton(
             onPressed: () {
               showDialog(
@@ -106,10 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: Colors.purple,
               padding: const EdgeInsets.symmetric(vertical: 18),
             ),
-            child: const Text("🧪 Test DRIP Tip Popup", 
+            child: const Text("🧪 Test DRIP Tip Popup",
                 style: TextStyle(fontSize: 18)),
           ),
-          // ====================================================
 
           const SizedBox(height: 40),
           _buildSelfieButton(),
@@ -156,6 +151,70 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontStyle: FontStyle.italic)),
         ],
       ),
+    );
+  }
+}
+
+// ==================== PLACEHOLDER SCREENS ====================
+// (We will create proper files for these later. For now, these prevent build errors)
+
+class CategoryScreen extends StatelessWidget {
+  final String category;
+  const CategoryScreen(this.category, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("$category Deals")),
+      body: const Center(child: Text("Category screen coming soon...")),
+    );
+  }
+}
+
+class InstantAlertsUpgradeScreen extends StatelessWidget {
+  const InstantAlertsUpgradeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Instant Alerts")),
+      body: const Center(child: Text("Upgrade screen coming soon...")),
+    );
+  }
+}
+
+class FamilyModeScreen extends StatelessWidget {
+  const FamilyModeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Family Mode")),
+      body: const Center(child: Text("Family Mode coming soon...")),
+    );
+  }
+}
+
+class InstantSavingsScreen extends StatelessWidget {
+  const InstantSavingsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Instant Savings")),
+      body: const Center(child: Text("Instant Savings coming soon...")),
+    );
+  }
+}
+
+class SelfieFilterScreen extends StatelessWidget {
+  const SelfieFilterScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Selfie Share")),
+      body: const Center(child: Text("Selfie Filter coming soon...")),
     );
   }
 }
