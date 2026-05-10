@@ -3,14 +3,12 @@ name: Flutter Android Build
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45  # Safety net
+    timeout-minutes: 35   # Reduced a bit
 
     steps:
       - uses: actions/checkout@v4
@@ -28,10 +26,26 @@ jobs:
           flutter-version: '3.41.x'
           channel: 'stable'
           cache: true
-          cache-key: flutter-${{ runner.os }}-stable
 
-      - name: Accept Android licenses
-        run: echo "y" | flutter doctor --android-licenses
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Cache Android NDK
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/lib/android/sdk/ndk/27.0.12077973
+          key: ndk-27.0.12077973-${{ runner.os }}
+
+      - name: Accept licenses & Install NDK
+        run: |
+          echo "y" | flutter doctor --android-licenses
+          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;27.0.12077973" --sdk_root=$ANDROID_HOME
 
       - name: Flutter Pub Get
         run: flutter pub get
