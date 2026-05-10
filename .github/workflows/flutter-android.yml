@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 35   # Reduced a bit
+    timeout-minutes: 40
 
     steps:
       - uses: actions/checkout@v4
@@ -27,31 +27,27 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Cache Gradle
+      - name: Cache Gradle & Android SDK
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-
-      - name: Cache Android NDK
-        uses: actions/cache@v4
-        with:
-          path: |
-            /usr/local/lib/android/sdk/ndk/27.0.12077973
-          key: ndk-27.0.12077973-${{ runner.os }}
+            /usr/local/lib/android/sdk
+          key: gradle-android-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-android-${{ runner.os }}-
 
       - name: Accept licenses & Install NDK
         run: |
           echo "y" | flutter doctor --android-licenses
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;27.0.12077973" --sdk_root=$ANDROID_HOME
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973" --sdk_root=$ANDROID_HOME || true
 
       - name: Flutter Pub Get
         run: flutter pub get
 
       - name: Build Debug APK
-        run: flutter build apk --debug
+        run: flutter build apk --debug --verbose
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
