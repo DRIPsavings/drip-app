@@ -1,8 +1,25 @@
+name: drip
+description: "DRIP — Real Drink Specials Near You."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'     # ← This fixes the error
+
+dependencies:
+  flutter:
+    sdk: flutter
+  audioplayers: ^6.1.0
+  share_plus: ^10.0.0
+  google_maps_flutter: ^2.12.3
+  url_launcher: ^6.3.0
+  speech_to_text: ^7.3.0
+  flutter_native_splash: ^2.4.3
+
 flutter:
   uses-material-design: true
 
   assets:
-    # Existing assets
     - assets/party_button.png
     - assets/coffee_button.png
     - assets/smoothie_button.png
@@ -15,8 +32,6 @@ flutter:
     - assets/party.mp3
     - assets/selfie.mp3
     - assets/smoothie.mp3
-
-    # DRIP Tip Popup Assets
     - assets/drip_tip_background.png
     - assets/tip_1_dollar.png
     - assets/tip_2_dollar.png

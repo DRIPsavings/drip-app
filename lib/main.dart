@@ -6,6 +6,9 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:math';
 
+// Import the popup we just created
+import 'widgets/drip_tip_popup.dart';
+
 void main() {
   runApp(const DripApp());
 }
@@ -56,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/drip_logo.png', height: 55), // Updated
+        title: Image.asset('assets/drip_logo.png', height: 55),
         centerTitle: true,
       ),
       body: ListView(
@@ -88,6 +91,26 @@ class _HomeScreenState extends State<HomeScreen> {
             child: const Text("💰 Instant Savings",
                 style: TextStyle(fontSize: 20)),
           ),
+          const SizedBox(height: 20),
+
+          // ==================== TEST BUTTON ====================
+          ElevatedButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (context) => const DripTipPopup(),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purple,
+              padding: const EdgeInsets.symmetric(vertical: 18),
+            ),
+            child: const Text("🧪 Test DRIP Tip Popup", 
+                style: TextStyle(fontSize: 18)),
+          ),
+          // ====================================================
+
           const SizedBox(height: 40),
           _buildSelfieButton(),
         ],
@@ -120,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(25),
-            child: Image.asset('assets/selfie_share.jpg',  // Still .jpg
+            child: Image.asset('assets/selfie_share.jpg',
                 width: 220, height: 220, fit: BoxFit.cover),
           ),
           const SizedBox(height: 16),
