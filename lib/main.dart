@@ -24,7 +24,7 @@ class DripApp extends StatelessWidget {
   }
 }
 
-// ==================== SPLASH SCREEN ====================
+// ==================== SPLASH SCREEN (3 seconds) ====================
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
@@ -117,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Smaller buttons (height: 130)
   Widget _buildBigButton(String imageName, String? soundFile, Widget screen) {
     return GestureDetector(
       onTap: () {
@@ -125,7 +126,10 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset('assets/$imageName', width: double.infinity, height: 160, fit: BoxFit.cover),
+        child: Image.asset('assets/$imageName', 
+            width: double.infinity, 
+            height: 130, 
+            fit: BoxFit.cover),
       ),
     );
   }
@@ -151,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ==================== CATEGORY SCREENS (Party, Coffee, Smoothies) ====================
+// ==================== CATEGORY SCREENS ====================
 class CategoryScreen extends StatelessWidget {
   final String category;
   const CategoryScreen(this.category, {super.key});
@@ -176,7 +180,7 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
-// ==================== INSTANT ALERTS UPGRADE (Sales Page) ====================
+// ==================== INSTANT ALERTS UPGRADE ====================
 class InstantAlertsUpgradeScreen extends StatelessWidget {
   const InstantAlertsUpgradeScreen({super.key});
 
@@ -206,7 +210,6 @@ class InstantAlertsUpgradeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
               ),
               onPressed: () {
-                // TODO: Add purchase flow later
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen()));
               },
               child: const Text("Upgrade Now — \$12/year", style: TextStyle(fontSize: 20, color: Colors.black)),
@@ -225,13 +228,13 @@ class InstantAlertsUpgradeScreen extends StatelessWidget {
   }
 }
 
-// ==================== REMAINING SCREENS ====================
+// ==================== OTHER SCREENS ====================
 class InstantSavingsScreen extends StatelessWidget {
   const InstantSavingsScreen({super.key});
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text("My Instant Savings")),
-        body: const Center(child: Text("Full Instant Savings Dashboard\n(Voice Search + Alerts + Delivery)\nComing Soon")),
+        body: const Center(child: Text("Full Instant Savings Dashboard\n(Coming Soon)")),
       );
 }
 
