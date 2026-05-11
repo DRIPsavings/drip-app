@@ -9,7 +9,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- === GOOGLE MAPS API KEY === -->
+        <!-- GOOGLE MAPS API KEY -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAkxohJYbUCHykcKlfU9EYOOs7ErvOtLdQ"/>
@@ -29,5 +29,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
     </application>
+
 </manifest>
