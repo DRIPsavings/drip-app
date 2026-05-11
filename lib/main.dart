@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:math';
-
-// Import the popup
 import 'widgets/drip_tip_popup.dart';
 
 void main() {
@@ -61,49 +55,40 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Image.asset('assets/drip_logo.png', height: 55),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.lightbulb),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (_) => const DripTipPopup(),
+            ),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildBigButton('party_button.png', 'party.mp3', const CategoryScreen("party")),
+          _buildBigButton('party_button.png', 'party.mp3', const CategoryScreen("Adult Beverages")),
           const SizedBox(height: 12),
-          _buildBigButton('coffee_button.png', 'coffee.mp3', const CategoryScreen("coffee")),
+          _buildBigButton('coffee_button.png', 'coffee.mp3', const CategoryScreen("Coffee")),
           const SizedBox(height: 12),
-          _buildBigButton('smoothie_button.png', 'smoothie.mp3', const CategoryScreen("smoothie")),
+          _buildBigButton('smoothie_button.png', 'smoothie.mp3', const CategoryScreen("Smoothies")),
           const SizedBox(height: 25),
+
           _buildBigButton('instant_alerts.png', 'alerts.mp3', const InstantAlertsUpgradeScreen()),
           const SizedBox(height: 30),
+
           _buildBigButton('family_mode_button.png', null, const FamilyModeScreen()),
           const SizedBox(height: 30),
 
           ElevatedButton(
             onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const InstantSavingsScreen())),
+                context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())),
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange,
                 padding: const EdgeInsets.symmetric(vertical: 18)),
             child: const Text("💰 Instant Savings",
                 style: TextStyle(fontSize: 20)),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Test Tip Popup Button
-          ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (context) => const DripTipPopup(),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.purple,
-              padding: const EdgeInsets.symmetric(vertical: 18),
-            ),
-            child: const Text("🧪 Test DRIP Tip Popup",
-                style: TextStyle(fontSize: 18)),
           ),
 
           const SizedBox(height: 40),
@@ -155,9 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ==================== PLACEHOLDER SCREENS ====================
-// (We will create proper files for these later. For now, these prevent build errors)
-
+// ==================== REAL SCREENS ====================
 class CategoryScreen extends StatelessWidget {
   final String category;
   const CategoryScreen(this.category, {super.key});
@@ -165,56 +148,69 @@ class CategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("$category Deals")),
-      body: const Center(child: Text("Category screen coming soon...")),
+      appBar: AppBar(title: Text("$category Specials Near You")),
+      body: GoogleMap(
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(29.7604, -95.3698),
+          zoom: 13,
+        ),
+        markers: {
+          const Marker(
+            markerId: MarkerId('1'),
+            position: LatLng(29.7604, -95.3698),
+            infoWindow: InfoWindow(title: 'Sample Deal', snippet: 'Happy Hour Special'),
+          ),
+        },
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
+      ),
     );
   }
 }
 
 class InstantAlertsUpgradeScreen extends StatelessWidget {
   const InstantAlertsUpgradeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Instant Alerts")),
-      body: const Center(child: Text("Upgrade screen coming soon...")),
+      body: const Center(
+        child: Text("Premium Alerts — \$12/year\n(Coming soon with full flow)", 
+            style: TextStyle(fontSize: 20)),
+      ),
     );
   }
 }
 
 class FamilyModeScreen extends StatelessWidget {
   const FamilyModeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Family Mode")),
-      body: const Center(child: Text("Family Mode coming soon...")),
+      body: const Center(child: Text("Share deals with family & friends")),
     );
   }
 }
 
 class InstantSavingsScreen extends StatelessWidget {
   const InstantSavingsScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Instant Savings")),
-      body: const Center(child: Text("Instant Savings coming soon...")),
+      appBar: AppBar(title: const Text("💰 Instant Savings")),
+      body: const Center(child: Text("Voice search + saved addresses coming soon")),
     );
   }
 }
 
 class SelfieFilterScreen extends StatelessWidget {
   const SelfieFilterScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Selfie Share")),
-      body: const Center(child: Text("Selfie Filter coming soon...")),
+      appBar: AppBar(title: const Text("Drop the Drip")),
+      body: const Center(child: Text("Selfie Filter & Share Screen\n(Coming soon)")),
     );
   }
 }
