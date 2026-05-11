@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Smaller buttons (height: 130)
+  // Smaller buttons - height reduced to 130
   Widget _buildBigButton(String imageName, String? soundFile, Widget screen) {
     return GestureDetector(
       onTap: () {
