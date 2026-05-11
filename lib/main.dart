@@ -9,7 +9,6 @@ void main() {
 
 class DripApp extends StatelessWidget {
   const DripApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,10 +24,9 @@ class DripApp extends StatelessWidget {
   }
 }
 
-// ==================== LONGER SPLASH SCREEN ====================
+// ==================== SPLASH SCREEN ====================
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -38,12 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-      }
+      if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
     });
   }
 
@@ -57,10 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset('assets/drip_logo.png', height: 180),
             const SizedBox(height: 24),
-            const Text(
-              "Real Drink Deals Near You",
-              style: TextStyle(fontSize: 22, color: Colors.white70, letterSpacing: 1.5),
-            ),
+            const Text("Real Drink Deals Near You", style: TextStyle(fontSize: 22, color: Colors.white70)),
           ],
         ),
       ),
@@ -101,43 +91,33 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.lightbulb),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (_) => const DripTipPopup(),
-            ),
+            onPressed: () => showDialog(context: context, builder: (_) => const DripTipPopup()),
           ),
         ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildBigButton('party_button.png', 'party.mp3', const CategoryScreen("Adult Beverages"), height: 160),
+          _buildBigButton('party_button.png', 'party.mp3', const CategoryScreen("Party")),
           const SizedBox(height: 12),
-          _buildBigButton('coffee_button.png', 'coffee.mp3', const CategoryScreen("Coffee"), height: 160),
+          _buildBigButton('coffee_button.png', 'coffee.mp3', const CategoryScreen("Coffee")),
           const SizedBox(height: 12),
-          _buildBigButton('smoothie_button.png', 'smoothie.mp3', const CategoryScreen("Smoothies"), height: 160),
+          _buildBigButton('smoothie_button.png', 'smoothie.mp3', const CategoryScreen("Smoothies")),
           const SizedBox(height: 30),
 
           _buildBigButton('instant_alerts.png', 'alerts.mp3', const InstantAlertsUpgradeScreen()),
           const SizedBox(height: 30),
 
           _buildBigButton('family_mode_button.png', null, const FamilyModeScreen()),
-          const SizedBox(height: 30),
-
-          ElevatedButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, padding: const EdgeInsets.symmetric(vertical: 18)),
-            child: const Text("💰 Instant Savings", style: TextStyle(fontSize: 20)),
-          ),
-
           const SizedBox(height: 40),
+
           _buildSelfieButton(),
         ],
       ),
     );
   }
 
-  Widget _buildBigButton(String imageName, String? soundFile, Widget screen, {double height = 200}) {
+  Widget _buildBigButton(String imageName, String? soundFile, Widget screen) {
     return GestureDetector(
       onTap: () {
         if (soundFile != null) playSound(soundFile);
@@ -145,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset('assets/$imageName', width: double.infinity, height: height, fit: BoxFit.cover),
+        child: Image.asset('assets/$imageName', width: double.infinity, height: 160, fit: BoxFit.cover),
       ),
     );
   }
@@ -171,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ==================== REAL CATEGORY SCREEN WITH MAP ====================
+// ==================== CATEGORY SCREENS (Party, Coffee, Smoothies) ====================
 class CategoryScreen extends StatelessWidget {
   final String category;
   const CategoryScreen(this.category, {super.key});
@@ -181,15 +161,12 @@ class CategoryScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("$category Specials Near You")),
       body: GoogleMap(
-        initialCameraPosition: const CameraPosition(
-          target: LatLng(29.7604, -95.3698), // Houston area
-          zoom: 13,
-        ),
+        initialCameraPosition: const CameraPosition(target: LatLng(29.7604, -95.3698), zoom: 13),
         markers: {
           const Marker(
             markerId: MarkerId('1'),
             position: LatLng(29.7604, -95.3698),
-            infoWindow: InfoWindow(title: 'Sample Deal', snippet: 'Happy Hour Special'),
+            infoWindow: InfoWindow(title: 'Live Deal', snippet: 'Happy Hour Specials'),
           ),
         },
         myLocationEnabled: true,
@@ -199,13 +176,62 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
-// ==================== OTHER SCREENS ====================
+// ==================== INSTANT ALERTS UPGRADE (Sales Page) ====================
 class InstantAlertsUpgradeScreen extends StatelessWidget {
   const InstantAlertsUpgradeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Instant Alerts")),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text("Premium Instant Alerts", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            const Text("Only \$12 / year • Cancel anytime", style: TextStyle(fontSize: 24, color: Colors.greenAccent)),
+            const SizedBox(height: 30),
+            const Text("What you'll get:", style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 15),
+            _benefitRow("Real-time push alerts for coffee, smoothies & happy hour"),
+            _benefitRow("Personalized savings on anything you want"),
+            _benefitRow("One-tap DoorDash & Uber Eats ordering"),
+            _benefitRow("Family/Group sharing mode"),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+              ),
+              onPressed: () {
+                // TODO: Add purchase flow later
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen()));
+              },
+              child: const Text("Upgrade Now — \$12/year", style: TextStyle(fontSize: 20, color: Colors.black)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _benefitRow(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(children: [const Icon(Icons.check_circle, color: Colors.greenAccent), const SizedBox(width: 12), Expanded(child: Text(text, style: const TextStyle(fontSize: 17)))]),
+    );
+  }
+}
+
+// ==================== REMAINING SCREENS ====================
+class InstantSavingsScreen extends StatelessWidget {
+  const InstantSavingsScreen({super.key});
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text("Instant Alerts")),
-        body: const Center(child: Text("Premium Alerts — \$12/year\n(Full version coming soon)")),
+        appBar: AppBar(title: const Text("My Instant Savings")),
+        body: const Center(child: Text("Full Instant Savings Dashboard\n(Voice Search + Alerts + Delivery)\nComing Soon")),
       );
 }
 
@@ -218,20 +244,11 @@ class FamilyModeScreen extends StatelessWidget {
       );
 }
 
-class InstantSavingsScreen extends StatelessWidget {
-  const InstantSavingsScreen({super.key});
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text("💰 Instant Savings")),
-        body: const Center(child: Text("Voice search + saved addresses coming soon")),
-      );
-}
-
 class SelfieFilterScreen extends StatelessWidget {
   const SelfieFilterScreen({super.key});
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text("Drop the Drip")),
-        body: const Center(child: Text("Selfie Filter & Share Screen\n(Coming soon)")),
+        body: const Center(child: Text("Selfie Filter & Share Screen\n(Coming Soon)")),
       );
 }
