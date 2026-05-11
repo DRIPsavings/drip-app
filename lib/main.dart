@@ -20,7 +20,50 @@ class DripApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF0F0F0F),
         appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
+    );
+  }
+}
+
+// ==================== LONGER SPLASH SCREEN ====================
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F0F0F),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/drip_logo.png', height: 180),
+            const SizedBox(height: 24),
+            const Text(
+              "Real Drink Deals Near You",
+              style: TextStyle(fontSize: 22, color: Colors.white70, letterSpacing: 1.5),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -68,12 +111,12 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildBigButton('party_button.png', 'party.mp3', const CategoryScreen("Adult Beverages")),
+          _buildBigButton('party_button.png', 'party.mp3', const CategoryScreen("Adult Beverages"), height: 160),
           const SizedBox(height: 12),
-          _buildBigButton('coffee_button.png', 'coffee.mp3', const CategoryScreen("Coffee")),
+          _buildBigButton('coffee_button.png', 'coffee.mp3', const CategoryScreen("Coffee"), height: 160),
           const SizedBox(height: 12),
-          _buildBigButton('smoothie_button.png', 'smoothie.mp3', const CategoryScreen("Smoothies")),
-          const SizedBox(height: 25),
+          _buildBigButton('smoothie_button.png', 'smoothie.mp3', const CategoryScreen("Smoothies"), height: 160),
+          const SizedBox(height: 30),
 
           _buildBigButton('instant_alerts.png', 'alerts.mp3', const InstantAlertsUpgradeScreen()),
           const SizedBox(height: 30),
@@ -82,13 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 30),
 
           ElevatedButton(
-            onPressed: () => Navigator.push(
-                context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                padding: const EdgeInsets.symmetric(vertical: 18)),
-            child: const Text("💰 Instant Savings",
-                style: TextStyle(fontSize: 20)),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, padding: const EdgeInsets.symmetric(vertical: 18)),
+            child: const Text("💰 Instant Savings", style: TextStyle(fontSize: 20)),
           ),
 
           const SizedBox(height: 40),
@@ -98,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildBigButton(String imageName, String? soundFile, Widget screen) {
+  Widget _buildBigButton(String imageName, String? soundFile, Widget screen, {double height = 200}) {
     return GestureDetector(
       onTap: () {
         if (soundFile != null) playSound(soundFile);
@@ -106,8 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset('assets/$imageName',
-            width: double.infinity, fit: BoxFit.cover),
+        child: Image.asset('assets/$imageName', width: double.infinity, height: height, fit: BoxFit.cover),
       ),
     );
   }
@@ -116,31 +154,24 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         playSound('selfie.mp3');
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => const SelfieFilterScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const SelfieFilterScreen()));
       },
       child: Column(
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(25),
-            child: Image.asset('assets/selfie_share.jpg',
-                width: 220, height: 220, fit: BoxFit.cover),
+            child: Image.asset('assets/selfie_share.jpg', width: 220, height: 220, fit: BoxFit.cover),
           ),
           const SizedBox(height: 16),
-          const Text("Drop the Drip",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-          const Text("Share this moment",
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 17,
-                  fontStyle: FontStyle.italic)),
+          const Text("Drop the Drip", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+          const Text("Share this moment", style: TextStyle(color: Colors.grey, fontSize: 17, fontStyle: FontStyle.italic)),
         ],
       ),
     );
   }
 }
 
-// ==================== REAL SCREENS ====================
+// ==================== REAL CATEGORY SCREEN WITH MAP ====================
 class CategoryScreen extends StatelessWidget {
   final String category;
   const CategoryScreen(this.category, {super.key});
@@ -151,7 +182,7 @@ class CategoryScreen extends StatelessWidget {
       appBar: AppBar(title: Text("$category Specials Near You")),
       body: GoogleMap(
         initialCameraPosition: const CameraPosition(
-          target: LatLng(29.7604, -95.3698),
+          target: LatLng(29.7604, -95.3698), // Houston area
           zoom: 13,
         ),
         markers: {
@@ -168,49 +199,39 @@ class CategoryScreen extends StatelessWidget {
   }
 }
 
+// ==================== OTHER SCREENS ====================
 class InstantAlertsUpgradeScreen extends StatelessWidget {
   const InstantAlertsUpgradeScreen({super.key});
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Instant Alerts")),
-      body: const Center(
-        child: Text("Premium Alerts — \$12/year\n(Coming soon with full flow)", 
-            style: TextStyle(fontSize: 20)),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text("Instant Alerts")),
+        body: const Center(child: Text("Premium Alerts — \$12/year\n(Full version coming soon)")),
+      );
 }
 
 class FamilyModeScreen extends StatelessWidget {
   const FamilyModeScreen({super.key});
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Family Mode")),
-      body: const Center(child: Text("Share deals with family & friends")),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text("Family Mode")),
+        body: const Center(child: Text("Share deals with family & friends")),
+      );
 }
 
 class InstantSavingsScreen extends StatelessWidget {
   const InstantSavingsScreen({super.key});
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("💰 Instant Savings")),
-      body: const Center(child: Text("Voice search + saved addresses coming soon")),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text("💰 Instant Savings")),
+        body: const Center(child: Text("Voice search + saved addresses coming soon")),
+      );
 }
 
 class SelfieFilterScreen extends StatelessWidget {
   const SelfieFilterScreen({super.key});
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Drop the Drip")),
-      body: const Center(child: Text("Selfie Filter & Share Screen\n(Coming soon)")),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text("Drop the Drip")),
+        body: const Center(child: Text("Selfie Filter & Share Screen\n(Coming soon)")),
+      );
 }
