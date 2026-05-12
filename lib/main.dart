@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ==================== IMPROVED CATEGORY SCREEN ====================
+// ==================== CATEGORY SCREEN (Fixed) ====================
 class CategoryScreen extends StatelessWidget {
   final String category;
   const CategoryScreen(this.category, {super.key});
@@ -162,7 +162,6 @@ class CategoryScreen extends StatelessWidget {
       appBar: AppBar(title: Text("$category Specials Near You")),
       body: Column(
         children: [
-          // Header
           Container(
             padding: const EdgeInsets.all(16),
             color: Colors.grey[900],
@@ -171,43 +170,18 @@ class CategoryScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ),
-          // Framed Google Map
-          SizedBox(
-            height: 300,
+          Expanded(
             child: GoogleMap(
               initialCameraPosition: const CameraPosition(target: LatLng(29.7604, -95.3698), zoom: 13),
               markers: {
                 const Marker(
                   markerId: MarkerId('1'),
                   position: LatLng(29.7604, -95.3698),
-                  infoWindow: InfoWindow(title: 'Happy Hour', snippet: '$2 Wells 4-7pm'),
+                  infoWindow: InfoWindow(title: 'Happy Hour', snippet: '\$2 Wells 4-7pm'),
                 ),
               },
               myLocationEnabled: true,
               myLocationButtonEnabled: true,
-            ),
-          ),
-          // Sample Deals
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text("Popular Deals Right Now", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 12),
-                  const ListTile(
-                    leading: Icon(Icons.local_drink, color: Colors.orange),
-                    title: Text("2-for-1 Cocktails"),
-                    subtitle: Text("0.8 miles • Ends soon"),
-                  ),
-                  const ListTile(
-                    leading: Icon(Icons.coffee, color: Colors.brown),
-                    title: Text("$1 Off Any Latte"),
-                    subtitle: Text("1.4 miles • Today only"),
-                  ),
-                ],
-              ),
             ),
           ),
         ],
