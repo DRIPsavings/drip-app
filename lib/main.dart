@@ -24,7 +24,7 @@ class DripApp extends StatelessWidget {
   }
 }
 
-// ==================== SPLASH SCREEN (3 seconds) ====================
+// ==================== SPLASH SCREEN ====================
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   @override
@@ -117,7 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Smaller buttons - height reduced to 130
   Widget _buildBigButton(String imageName, String? soundFile, Widget screen) {
     return GestureDetector(
       onTap: () {
@@ -126,10 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: Image.asset('assets/$imageName', 
-            width: double.infinity, 
-            height: 130, 
-            fit: BoxFit.cover),
+        child: Image.asset('assets/$imageName', width: double.infinity, height: 130, fit: BoxFit.cover),
       ),
     );
   }
@@ -155,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ==================== CATEGORY SCREENS ====================
+// ==================== IMPROVED CATEGORY SCREEN ====================
 class CategoryScreen extends StatelessWidget {
   final String category;
   const CategoryScreen(this.category, {super.key});
@@ -164,17 +160,57 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("$category Specials Near You")),
-      body: GoogleMap(
-        initialCameraPosition: const CameraPosition(target: LatLng(29.7604, -95.3698), zoom: 13),
-        markers: {
-          const Marker(
-            markerId: MarkerId('1'),
-            position: LatLng(29.7604, -95.3698),
-            infoWindow: InfoWindow(title: 'Live Deal', snippet: 'Happy Hour Specials'),
+      body: Column(
+        children: [
+          // Header
+          Container(
+            padding: const EdgeInsets.all(16),
+            color: Colors.grey[900],
+            child: Text(
+              "Live $category Deals Near You",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
           ),
-        },
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
+          // Framed Google Map
+          SizedBox(
+            height: 300,
+            child: GoogleMap(
+              initialCameraPosition: const CameraPosition(target: LatLng(29.7604, -95.3698), zoom: 13),
+              markers: {
+                const Marker(
+                  markerId: MarkerId('1'),
+                  position: LatLng(29.7604, -95.3698),
+                  infoWindow: InfoWindow(title: 'Happy Hour', snippet: '$2 Wells 4-7pm'),
+                ),
+              },
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+            ),
+          ),
+          // Sample Deals
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Popular Deals Right Now", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 12),
+                  const ListTile(
+                    leading: Icon(Icons.local_drink, color: Colors.orange),
+                    title: Text("2-for-1 Cocktails"),
+                    subtitle: Text("0.8 miles • Ends soon"),
+                  ),
+                  const ListTile(
+                    leading: Icon(Icons.coffee, color: Colors.brown),
+                    title: Text("$1 Off Any Latte"),
+                    subtitle: Text("1.4 miles • Today only"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -183,7 +219,6 @@ class CategoryScreen extends StatelessWidget {
 // ==================== INSTANT ALERTS UPGRADE ====================
 class InstantAlertsUpgradeScreen extends StatelessWidget {
   const InstantAlertsUpgradeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,10 +240,7 @@ class InstantAlertsUpgradeScreen extends StatelessWidget {
             _benefitRow("Family/Group sharing mode"),
             const SizedBox(height: 40),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange,
-                padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20)),
               onPressed: () {
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen()));
               },
@@ -228,7 +260,7 @@ class InstantAlertsUpgradeScreen extends StatelessWidget {
   }
 }
 
-// ==================== OTHER SCREENS ====================
+// Placeholder screens
 class InstantSavingsScreen extends StatelessWidget {
   const InstantSavingsScreen({super.key});
   @override
