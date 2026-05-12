@@ -42,7 +42,7 @@ flutter:
     - assets/selfie.mp3
 
 flutter_native_splash:
-  color: "#0A1F3A"
+  color: "#0F0F0F"
   image: assets/splash.png
   android_12:
     image: assets/splash.png
