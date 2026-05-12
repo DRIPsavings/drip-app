@@ -20,7 +20,7 @@ class DripApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF0F0F0F),
         appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
       ),
-      home: const SplashScreen(),   // Your timed intro screen
+      home: const SplashScreen(),   // Your timed intro
     );
   }
 }
@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-// ==================== HOME SCREEN ====================
+// ====================== HOME SCREEN ======================
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   @override
@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ====================== CATEGORY SCREENS ======================
+// ====================== CATEGORY SCREEN ======================
 class CategoryScreen extends StatelessWidget {
   final String title;
   final Color color;
@@ -217,7 +217,7 @@ class InstantSavingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text("My Instant Savings")),
-        body: const Center(child: Text("Full Premium Instant Savings Screen\n(Alerts, Maps, Delivery)")),
+        body: const Center(child: Text("Full Premium Instant Savings Screen\n(Alerts, Addresses, Maps, Delivery)")),
       );
 }
 
@@ -263,9 +263,19 @@ class FamilyModeScreen extends StatelessWidget {
           children: [
             const Text("Share deals with friends & family", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             const SizedBox(height: 30),
-            ElevatedButton.icon(icon: const Icon(Icons.group_add), label: const Text("Create New Group"), onPressed: () {}, style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 60))),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.group_add),
+              label: const Text("Create New Group"),
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 60)),
+            ),
             const SizedBox(height: 15),
-            ElevatedButton.icon(icon: const Icon(Icons.person_add), label: const Text("Add Members"), onPressed: () {}, style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 60))),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.person_add),
+              label: const Text("Add Members"),
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 60)),
+            ),
           ],
         ),
       ),
