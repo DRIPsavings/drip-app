@@ -45,12 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Image.asset('assets/drip_logo.png', height: 45)),
+      appBar: AppBar(
+        title: const Text("DRIP", style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF00D4FF))),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Image.asset('assets/drip_logo.png', height: 140),
+            Image.asset('assets/drip_logo.png', height: 120),
             const SizedBox(height: 30),
 
             _imageButton('assets/party_button.png', () {
@@ -59,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
             }),
             _imageButton('assets/coffee_button.png', () {
               playSound('coffee.mp3');
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Coffee's My JAM!", color: Colors.brown)));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Coffee's My CRACK!", color: Colors.brown)));
             }),
             _imageButton('assets/smoothie_button.png', () {
               playSound('smoothie.mp3');
@@ -68,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             _imageButton('assets/instant_alerts.png', () {
               playSound('alerts.mp3');
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())); // Unlocked for testing
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen()));
             }),
 
             _imageButton('assets/selfie_share.jpg', () {
@@ -85,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Smaller buttons as requested
   Widget _imageButton(String asset, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
@@ -99,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ====================== CATEGORY SCREENS (Coffee / Party / Smoothie) ======================
+// ====================== CATEGORY SCREEN (Coffee / Party / Smoothie) ======================
 class CategoryScreen extends StatefulWidget {
   final String title;
   final Color color;
@@ -225,9 +229,9 @@ class InstantSavingsScreen extends StatefulWidget {
 class _InstantSavingsScreenState extends State<InstantSavingsScreen> {
   final List<Map<String, String>> activeAlerts = [];
 
-  void addAlert(String term, String radius) {
+  void addAlert(String term) {
     setState(() {
-      activeAlerts.add({"term": term, "radius": radius});
+      activeAlerts.add({"term": term, "radius": "5 miles"});
     });
   }
 
@@ -239,7 +243,7 @@ class _InstantSavingsScreenState extends State<InstantSavingsScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Text("Your Active Alerts", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text("Your Active Alerts", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             Expanded(
               child: ListView.builder(
                 itemCount: activeAlerts.length,
@@ -256,9 +260,8 @@ class _InstantSavingsScreenState extends State<InstantSavingsScreen> {
                 },
               ),
             ),
-            // Simple add alert for testing
             ElevatedButton(
-              onPressed: () => addAlert("Coffee Specials", "5 miles"),
+              onPressed: () => addAlert("Coffee Specials"),
               child: const Text("Add Test Alert (Coffee)"),
             ),
           ],
@@ -268,7 +271,7 @@ class _InstantSavingsScreenState extends State<InstantSavingsScreen> {
   }
 }
 
-// ====================== SELFIE ======================
+// ====================== SELFIE "DROP THE DRIP" ======================
 class SelfieFilterScreen extends StatelessWidget {
   const SelfieFilterScreen({super.key});
   @override
@@ -301,7 +304,35 @@ class FamilyModeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("👨‍👩‍👧‍👦 Family / Group Mode")),
-      body: const Center(child: Text("Family Mode - Share alerts with friends & family")),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            const Text("Share deals with friends & family", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.group_add),
+              label: const Text("Create New Group"),
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 60)),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.person_add),
+              label: const Text("Add Members"),
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 60)),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.share),
+              label: const Text("Share My Alerts"),
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 60)),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
