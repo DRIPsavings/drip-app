@@ -1,5 +1,5 @@
 name: drip
-description: "DRIP — Real Drink Deals Near You"
+description: "DRIP — Real Drink Specials Near You."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -10,39 +10,25 @@ dependencies:
   flutter:
     sdk: flutter
   audioplayers: ^6.1.0
-  google_maps_flutter: ^2.12.3
   share_plus: ^10.0.0
-  speech_to_text: ^7.3.0
+  google_maps_flutter: ^2.12.3
   url_launcher: ^6.3.0
-  flutter_native_splash: ^2.4.3
+  speech_to_text: ^7.3.0
+  geolocator: ^13.0.0
 
 flutter:
   uses-material-design: true
 
   assets:
-    # Images
-    - assets/party_button.png
-    - assets/coffee_button.png
-    - assets/smoothie_button.png
-    - assets/instant_alerts.png
-    - assets/family_mode_button.png
+    - assets/party_button.jpg
+    - assets/coffee_button.jpg
+    - assets/smoothie_button.jpg
+    - assets/instant_alerts.jpg
     - assets/selfie_share.jpg
-    - assets/drip_logo.png
-    - assets/splash.png
-    - assets/drip_tip_background.png
-    - assets/tip_1_dollar.png
-    - assets/tip_2_dollar.png
-    - assets/no_thank_you.png
-
-    # Audio
+    - assets/drip_logo.jpg
+    - assets/family_mode_button.jpg
     - assets/party.mp3
     - assets/coffee.mp3
     - assets/smoothie.mp3
     - assets/alerts.mp3
     - assets/selfie.mp3
-
-flutter_native_splash:
-  color: "#0F0F0F"
-  image: assets/splash.png
-  android_12:
-    image: assets/splash.png
