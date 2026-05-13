@@ -45,28 +45,28 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Image.asset('assets/drip_logo.jpg', height: 45)),
+      appBar: AppBar(title: Image.asset('assets/drip_logo.png', height: 45)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            Image.asset('assets/drip_logo.jpg', height: 140),
+            Image.asset('assets/drip_logo.png', height: 140),
             const SizedBox(height: 30),
 
-            _imageButton('assets/party_button.jpg', () {
+            _imageButton('assets/party_button.png', () {
               playSound('party.mp3');
               Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Get The Party Started", color: Colors.purple)));
             }),
-            _imageButton('assets/coffee_button.jpg', () {
+            _imageButton('assets/coffee_button.png', () {
               playSound('coffee.mp3');
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Coffee's My CRACK!", color: Colors.brown)));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Coffee's My JAM!", color: Colors.brown)));
             }),
-            _imageButton('assets/smoothie_button.jpg', () {
+            _imageButton('assets/smoothie_button.png', () {
               playSound('smoothie.mp3');
               Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Groovy Smoothie", color: Colors.green)));
             }),
 
-            _imageButton('assets/instant_alerts.jpg', () {
+            _imageButton('assets/instant_alerts.png', () {
               playSound('alerts.mp3');
               Navigator.push(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())); // Unlocked for testing
             }),
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const SelfieFilterScreen()));
             }),
 
-            _imageButton('assets/family_mode_button.jpg', () {
+            _imageButton('assets/family_mode_button.png', () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const FamilyModeScreen()));
             }),
           ],
