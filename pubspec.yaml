@@ -15,12 +15,13 @@ dependencies:
   url_launcher: ^6.3.0
   speech_to_text: ^7.3.0
   geolocator: ^13.0.0
-  http: ^1.2.2          # ← NEW for real Google Places API
+  http: ^1.2.2
+  shared_preferences: ^2.3.0
 
 flutter:
   uses-material-design: true
-
   assets:
+    - assets/splash.png
     - assets/party_button.png
     - assets/coffee_button.png
     - assets/smoothie_button.png
@@ -33,4 +34,3 @@ flutter:
     - assets/smoothie.mp3
     - assets/alerts.mp3
     - assets/selfie.mp3
-    - assets/splash.png
