@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-// ====================== HOME SCREEN (All Changes Applied) ======================
+// ====================== HOME SCREEN ======================
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
   @override State<HomeScreen> createState() => _HomeScreenState();
@@ -92,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              // Top 3 buttons - larger
               Row(
                 children: [
                   Expanded(child: _imageButton('assets/smoothie_button.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Groovy Smoothie", color: Colors.green))), height: 88)),
@@ -103,24 +102,16 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               _imageButton('assets/party_button.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Get The Party Started", color: Colors.purple))), height: 88),
               const SizedBox(height: 30),
-              // Instant Alerts - larger + left aligned
               _imageButton('assets/instant_alerts.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())), height: 110),
               const SizedBox(height: 25),
-              // Selfie with text overlay - larger & responsive
               Stack(
                 alignment: Alignment.topCenter,
                 children: [
                   _imageButton('assets/selfie_share.jpg', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SelfieFilterScreen())), height: 110),
-                  const Positioned(
-                    top: 16,
-                    child: Text("Share this moment with a selfie!", 
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(blurRadius: 4, color: Colors.black)]),
-                      textAlign: TextAlign.center),
-                  ),
+                  const Positioned(top: 16, child: Text("Share this moment with a selfie!", style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white))),
                 ],
               ),
               const SizedBox(height: 20),
-              // Family Mode - larger & responsive
               _imageButton('assets/family_mode_button.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FamilyModeScreen())), height: 110),
             ],
           ),
@@ -134,16 +125,13 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset(asset, fit: BoxFit.contain, height: height, width: double.infinity),
-        ),
+        child: ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.asset(asset, fit: BoxFit.contain, height: height, width: double.infinity)),
       ),
     );
   }
 }
 
-// ====================== CATEGORY SCREEN (Real Data + Dynamic Zoom) ======================
+// ====================== CATEGORY SCREEN ======================
 class CategoryScreen extends StatefulWidget {
   final String title;
   final Color color;
