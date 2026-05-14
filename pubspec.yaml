@@ -1,7 +1,7 @@
 name: drip
 description: "DRIP — Real Drink Specials Near You."
 publish_to: 'none'
-version: 1.0.1+2
+version: 1.0.6+7   # ← Increased for fresh build
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -20,17 +20,18 @@ dependencies:
 
 flutter:
   uses-material-design: true
+
   assets:
+    # Splash
     - assets/splash.png
-    - assets/party_button.png
-    - assets/coffee_button.png
+    
+    # Greeting voices
+    - assets/greetings/
+    
+    # Home screen buttons
     - assets/smoothie_button.png
+    - assets/coffee_button.png
+    - assets/party_button.png
     - assets/instant_alerts.png
     - assets/selfie_share.jpg
-    - assets/drip_logo.png
     - assets/family_mode_button.png
-    - assets/party.mp3
-    - assets/coffee.mp3
-    - assets/smoothie.mp3
-    - assets/alerts.mp3
-    - assets/selfie.mp3
