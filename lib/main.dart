@@ -9,7 +9,6 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const DripApp());
@@ -32,113 +31,38 @@ class DripApp extends StatelessWidget {
           radius: const Radius.circular(10),
         ),
       ),
-      home: const FirstLaunchChecker(),
+      home: const SplashScreen(),
     );
   }
 }
 
-// ====================== FIRST LAUNCH CHECKER ======================
-class FirstLaunchChecker extends StatefulWidget {
-  const FirstLaunchChecker({super.key});
+// ====================== SPLASH SCREEN ======================
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
   @override
-  State<FirstLaunchChecker> createState() => _FirstLaunchCheckerState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
-class _FirstLaunchCheckerState extends State<FirstLaunchChecker> {
+
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkFirstLaunch();
-  }
-  Future<void> _checkFirstLaunch() async {
-    final prefs = await SharedPreferences.getInstance();
-    final bool isFirst = prefs.getBool('has_seen_greeting') ?? true;
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => isFirst ? const GreetingSelectionScreen() : const HomeScreen()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
     });
   }
-  @override
-  Widget build(BuildContext context) => const SplashScreen();
-}
 
-// ====================== SPLASH ======================
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF0A1F3A), Color(0xFF1E3A5F)])),
-        child: Center(child: Image.asset('assets/splash.png', fit: BoxFit.contain, width: MediaQuery.of(context).size.width * 0.85)),
-      ),
-    );
-  }
-}
-
-// ====================== GREETING SELECTION ======================
-class GreetingSelectionScreen extends StatefulWidget {
-  const GreetingSelectionScreen({super.key});
-  @override
-  State<GreetingSelectionScreen> createState() => _GreetingSelectionScreenState();
-}
-class _GreetingSelectionScreenState extends State<GreetingSelectionScreen> {
-  final AudioPlayer _player = AudioPlayer();
-  int? selectedIndex;
-
-  final List<Map<String, String>> greetings = [
-    {'file': 'greetings/greet_f1.mp3', 'label': 'Female Voice 1'},
-    {'file': 'greetings/greet_f2.mp3', 'label': 'Female Voice 2'},
-    {'file': 'greetings/greet_f3.mp3', 'label': 'Female Voice 3'},
-    {'file': 'greetings/greet_f4.mp3', 'label': 'Female Voice 4'},
-    {'file': 'greetings/greet_f5.mp3', 'label': 'Female Voice 5'},
-    {'file': 'greetings/greet_m1.mp3', 'label': 'Male Voice 1'},
-    {'file': 'greetings/greet_m2.mp3', 'label': 'Male Voice 2'},
-    {'file': 'greetings/greet_m3.mp3', 'label': 'Male Voice 3'},
-    {'file': 'greetings/greet_m4.mp3', 'label': 'Male Voice 4'},
-    {'file': 'greetings/greet_m5.mp3', 'label': 'Male Voice 5'},
-  ];
-
-  Future<void> playGreeting(String file) async => await _player.play(AssetSource(file));
-
-  Future<void> selectGreeting(int index) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('has_seen_greeting', true);
-    await prefs.setString('selected_greeting', greetings[index]['file']!);
-    setState(() => selectedIndex = index);
-    await playGreeting(greetings[index]['file']!);
-    Timer(const Duration(seconds: 2), () {
-      if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
-    });
-  }
-
-  @override
-  void dispose() { _player.dispose(); super.dispose(); }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Choose Your Greeting")),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const Text("Select Your Personal Greeting Voice", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-            const SizedBox(height: 30),
-            Expanded(
-              child: ListView.builder(
-                itemCount: greetings.length,
-                itemBuilder: (context, index) => Card(
-                  color: selectedIndex == index ? const Color(0xFF00D4FF).withOpacity(0.2) : null,
-                  child: ListTile(
-                    title: Text(greetings[index]['label']!),
-                    trailing: IconButton(icon: const Icon(Icons.play_circle, color: Color(0xFF00D4FF)), onPressed: () => playGreeting(greetings[index]['file']!)),
-                    onTap: () => selectGreeting(index),
-                  ),
-                ),
-              ),
-            ),
-          ],
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF0A1F3A), Color(0xFF1E3A5F)]),
+        ),
+        child: Center(
+          child: Image.asset('assets/splash.png', fit: BoxFit.contain, width: MediaQuery.of(context).size.width * 0.85),
         ),
       ),
     );
@@ -151,26 +75,24 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   final AudioPlayer _player = AudioPlayer();
 
-  @override
-  void initState() {
-    super.initState();
-    _playSelectedGreeting();
+  Future<void> playSound(String file) async {
+    try { await _player.play(AssetSource(file)); } catch (e) { debugPrint("Audio error: $e"); }
   }
-  Future<void> _playSelectedGreeting() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? file = prefs.getString('selected_greeting');
-    if (file != null) await _player.play(AssetSource(file));
-  }
+
   @override
   void dispose() { _player.dispose(); super.dispose(); }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("DRIP", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF00D4FF), letterSpacing: 2)), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("DRIP", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF00D4FF), letterSpacing: 2)),
+        centerTitle: true,
+      ),
       body: Scrollbar(
         thumbVisibility: true,
         child: SingleChildScrollView(
@@ -203,13 +125,16 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.asset(asset, fit: BoxFit.contain, height: height, width: double.infinity)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Image.asset(asset, fit: BoxFit.contain, height: height, width: double.infinity),
+        ),
       ),
     );
   }
 }
 
-// ====================== CATEGORY SCREEN - FIXED & IMPROVED ======================
+// ====================== CATEGORY SCREEN (Real Google Data) ======================
 class CategoryScreen extends StatefulWidget {
   final String title;
   final Color color;
@@ -225,7 +150,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
   LatLng? userLocation;
   bool isLoading = true;
   List<Map<String, dynamic>> _places = [];
-  GoogleMapController? mapController;
 
   @override
   void initState() {
@@ -241,7 +165,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       userLocation = LatLng(pos.latitude, pos.longitude);
       await _fetchRealPlaces(userLocation!);
     } catch (e) {
-      debugPrint("Location error: $e");
+      debugPrint("Error: $e");
     } finally {
       setState(() => isLoading = false);
     }
@@ -256,24 +180,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
     final lower = widget.title.toLowerCase();
     if (lower.contains("coffee")) {
       types = ["cafe"];
-      keyword = "coffee OR latte OR cold brew OR espresso OR frappuccino OR starbucks";
+      keyword = "coffee OR latte OR cold brew OR espresso OR frappuccino";
     } else if (lower.contains("smoothie")) {
       types = ["cafe"];
-      keyword = "smoothie OR acai OR juice bar";
+      keyword = "smoothie OR acai OR juice";
     } else {
       types = ["bar", "night_club", "pub"];
-      keyword = "bar OR happy hour OR cocktail OR margarita OR pub";
+      keyword = "bar OR happy hour OR cocktail OR margarita";
     }
 
     final url = Uri.parse("https://places.googleapis.com/v1/places:searchNearby");
 
     final response = await http.post(
       url,
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.rating,places.id",
-      },
+      headers: {"Content-Type": "application/json", "X-Goog-Api-Key": apiKey, "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.location,places.rating,places.id"},
       body: jsonEncode({
         "locationRestriction": {"circle": {"center": {"latitude": location.latitude, "longitude": location.longitude}, "radius": (double.tryParse(selectedRadius.split(" ")[0]) ?? 5) * 1609.34}},
         "includedTypes": types,
@@ -289,7 +209,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         final loc = p['location'] ?? {};
         return {
           'id': p['id'] ?? '',
-          'name': p['displayName']?['text'] ?? 'Unknown Place',
+          'name': p['displayName']?['text'] ?? 'Unknown',
           'address': p['formattedAddress'] ?? '',
           'rating': p['rating']?.toString() ?? 'N/A',
           'position': LatLng(loc['latitude'] ?? 0.0, loc['longitude'] ?? 0.0),
@@ -301,33 +221,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
   List<Map<String, dynamic>> _getFilteredPlaces() {
     final query = _searchController.text.trim().toLowerCase();
     if (query.isEmpty) return _places;
-    return _places.where((p) => 
-      p['name'].toLowerCase().contains(query) || p['address'].toLowerCase().contains(query)
-    ).toList();
+    return _places.where((p) => p['name'].toLowerCase().contains(query) || p['address'].toLowerCase().contains(query)).toList();
   }
 
   double _calculateDistance(LatLng p1, LatLng p2) {
     const r = 3958.8;
     final dLat = (p2.latitude - p1.latitude) * (math.pi / 180);
     final dLon = (p2.longitude - p1.longitude) * (math.pi / 180);
-    final a = math.sin(dLat/2) * math.sin(dLat/2) + math.cos(p1.latitude * math.pi / 180) * math.cos(p2.latitude * math.pi / 180) * math.sin(dLon/2) * math.sin(dLon/2);
-    final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+    final a = math.sin(dLat/2)*math.sin(dLat/2) + math.cos(p1.latitude*math.pi/180)*math.cos(p2.latitude*math.pi/180)*math.sin(dLon/2)*math.sin(dLon/2);
+    final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a));
     return r * c;
   }
 
   Set<Marker> _getMapMarkers() {
     final filtered = _getFilteredPlaces();
     final Set<Marker> markers = {};
-    if (userLocation != null) {
-      markers.add(Marker(markerId: const MarkerId('user'), position: userLocation!, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)));
-    }
+    if (userLocation != null) markers.add(Marker(markerId: const MarkerId('user'), position: userLocation!, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)));
     for (var p in filtered) {
       final dist = _calculateDistance(userLocation ?? const LatLng(0,0), p['position'] as LatLng);
-      markers.add(Marker(
-        markerId: MarkerId(p['id']),
-        position: p['position'] as LatLng,
-        infoWindow: InfoWindow(title: p['name'], snippet: "${p['address']} • ${dist.toStringAsFixed(1)} mi"),
-      ));
+      markers.add(Marker(markerId: MarkerId(p['id']), position: p['position'] as LatLng, infoWindow: InfoWindow(title: p['name'], snippet: "${p['address']} • ${dist.toStringAsFixed(1)} mi")));
     }
     return markers;
   }
@@ -335,6 +247,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Future<void> _startListening() async {
     bool available = await _speech.initialize();
     if (available) _speech.listen(onResult: (result) => setState(() => _searchController.text = result.recognizedWords));
+  }
+
+  void _showPlaceDetails(Map<String, dynamic> place) {
+    final dist = userLocation != null ? _calculateDistance(userLocation!, place['position'] as LatLng) : 0.0;
+    showDialog(context: context, builder: (context) => AlertDialog(
+      title: Text(place['name']),
+      content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text("📍 ${place['address']}"),
+        Text("📏 ${dist.toStringAsFixed(1)} miles"),
+        if (place['rating'] != 'N/A') Text("⭐ ${place['rating']}"),
+      ]),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close")),
+        ElevatedButton.icon(icon: const Icon(Icons.map), label: const Text("Open in Maps"), onPressed: () {
+          final lat = (place['position'] as LatLng).latitude;
+          final lng = (place['position'] as LatLng).longitude;
+          launchUrl(Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng"));
+        }),
+      ],
+    ));
   }
 
   @override
@@ -347,42 +279,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
         thumbVisibility: true,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(child: TextField(controller: _searchController, decoration: const InputDecoration(hintText: "Search deals or speak address...", border: OutlineInputBorder()))),
-                  IconButton(icon: const Icon(Icons.mic, color: Color(0xFF00D4FF)), onPressed: _startListening),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: ["1 mile", "5 miles", "10 miles"].map((r) => ChoiceChip(label: Text(r), selected: selectedRadius == r, onSelected: (_) => setState(() => selectedRadius = r), selectedColor: widget.color)).toList()),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-              child: Text("Showing ${widget.title} near you (${filtered.length} found)", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00D4FF))),
-            ),
+            Padding(padding: const EdgeInsets.all(16), child: Row(children: [Expanded(child: TextField(controller: _searchController, decoration: const InputDecoration(hintText: "Search deals or speak address...", border: OutlineInputBorder()))), IconButton(icon: const Icon(Icons.mic, color: Color(0xFF00D4FF)), onPressed: _startListening)])),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: ["1 mile", "5 miles", "10 miles"].map((r) => ChoiceChip(label: Text(r), selected: selectedRadius == r, onSelected: (_) => setState(() => selectedRadius = r), selectedColor: widget.color)).toList())),
+            Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 8), child: Text("Showing ${widget.title} near you (${filtered.length} found)", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00D4FF)))),
             Expanded(
               flex: 2,
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : filtered.isEmpty
-                      ? const Center(child: Text("No matching places found.\nTry a larger radius.", textAlign: TextAlign.center))
-                      : ListView.builder(
-                          itemCount: filtered.length,
-                          itemBuilder: (context, index) {
-                            final p = filtered[index];
-                            final dist = userLocation != null ? _calculateDistance(userLocation!, p['position'] as LatLng) : 0.0;
-                            return ListTile(
-                              leading: const Icon(Icons.local_offer, color: Color(0xFF00D4FF)),
-                              title: Text(p['name']),
-                              subtitle: Text("${p['address']} • ${dist.toStringAsFixed(1)} mi"),
-                              onTap: () => _showPlaceDetails(p),
-                            );
-                          },
-                        ),
+              child: isLoading ? const Center(child: CircularProgressIndicator()) : filtered.isEmpty ? const Center(child: Text("No matching places found.\nTry a larger radius.", textAlign: TextAlign.center)) : ListView.builder(itemCount: filtered.length, itemBuilder: (context, index) {
+                final p = filtered[index];
+                final dist = userLocation != null ? _calculateDistance(userLocation!, p['position'] as LatLng) : 0.0;
+                return ListTile(leading: const Icon(Icons.local_offer, color: Color(0xFF00D4FF)), title: Text(p['name']), subtitle: Text("${p['address']} • ${dist.toStringAsFixed(1)} mi"), onTap: () => _showPlaceDetails(p));
+              }),
             ),
             Expanded(
               flex: 3,
@@ -393,30 +299,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 scrollGesturesEnabled: false,
                 zoomGesturesEnabled: true,
                 markers: _getMapMarkers(),
-                onMapCreated: (controller) => mapController = controller,
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showPlaceDetails(Map<String, dynamic> place) {
-    final dist = userLocation != null ? _calculateDistance(userLocation!, place['position'] as LatLng) : 0.0;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(place['name']),
-        content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [Text("📍 ${place['address']}"), Text("📏 ${dist.toStringAsFixed(1)} miles"), if (place['rating'] != 'N/A') Text("⭐ ${place['rating']}")]),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Close")),
-          ElevatedButton.icon(icon: const Icon(Icons.map), label: const Text("Open in Maps"), onPressed: () {
-            final lat = (place['position'] as LatLng).latitude;
-            final lng = (place['position'] as LatLng).longitude;
-            launchUrl(Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng"));
-          }),
-        ],
       ),
     );
   }
@@ -434,12 +320,7 @@ class InstantSavingsScreen extends StatefulWidget { const InstantSavingsScreen({
 class _InstantSavingsScreenState extends State<InstantSavingsScreen> {
   final List<Map<String, String>> activeAlerts = [];
   void addAlert(String term) => setState(() => activeAlerts.add({"term": term, "radius": "5 miles"}));
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("My Instant Savings")),
-      body: Scrollbar(thumbVisibility: true, child: Padding(padding: const EdgeInsets.all(16), child: Column(children: [const Text("Your Active Alerts", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)), Expanded(child: activeAlerts.isEmpty ? const Center(child: Text("No active alerts yet.")) : ListView.builder(itemCount: activeAlerts.length, itemBuilder: (c, i) => ListTile(title: Text(activeAlerts[i]["term"]!))),), ElevatedButton(onPressed: () => addAlert("Coffee Specials"), child: const Text("Add Test Alert"))]))));
-  }
+  @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text("My Instant Savings")), body: Scrollbar(thumbVisibility: true, child: Padding(padding: const EdgeInsets.all(16), child: Column(children: [const Text("Your Active Alerts", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)), Expanded(child: activeAlerts.isEmpty ? const Center(child: Text("No active alerts yet.\nTap below to test.")) : ListView.builder(itemCount: activeAlerts.length, itemBuilder: (c,i) => ListTile(title: Text(activeAlerts[i]["term"]!))),), ElevatedButton(onPressed: () => addAlert("Coffee Specials"), child: const Text("Add Test Alert"))]))));
 }
 
 class SelfieFilterScreen extends StatelessWidget { const SelfieFilterScreen({super.key}); @override Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: const Text("Drop the DRIP")), body: Scrollbar(thumbVisibility: true, child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Image.asset('assets/selfie_share.jpg', fit: BoxFit.contain), const SizedBox(height: 40), ElevatedButton(onPressed: () => Share.share("Saved again by my DRIP app! 🎉 #DRIPApp"), child: const Text("Share Selfie"))])))); }
