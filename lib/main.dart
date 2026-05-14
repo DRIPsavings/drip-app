@@ -39,8 +39,7 @@ class DripApp extends StatelessWidget {
 // ====================== SPLASH ======================
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  @override State<SplashScreen> createState() => _SplashScreenState();
 }
 class _SplashScreenState extends State<SplashScreen> {
   @override
@@ -63,11 +62,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-// ====================== HOME SCREEN (Updated Layout) ======================
+// ====================== HOME SCREEN ======================
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  @override State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -94,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              // Top two buttons side by side
               Row(
                 children: [
                   Expanded(child: _imageButton('assets/smoothie_button.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Groovy Smoothie", color: Colors.green))), height: 88)),
@@ -103,21 +100,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              // Party button centered
               _imageButton('assets/party_button.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoryScreen(title: "Get The Party Started", color: Colors.purple))), height: 88),
               const SizedBox(height: 30),
-              // Instant Alerts - larger and left aligned
               _imageButton('assets/instant_alerts.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const InstantSavingsScreen())), height: 110),
               const SizedBox(height: 20),
-              // Selfie with text overlay
               Stack(
                 alignment: Alignment.topCenter,
                 children: [
                   _imageButton('assets/selfie_share.jpg', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SelfieFilterScreen()))),
-                  const Positioned(
-                    top: 12,
-                    child: Text("Share this moment with a selfie!", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, shadows: [Shadow(blurRadius: 4, color: Colors.black)])),
-                  ),
+                  const Positioned(top: 12, child: Text("Share this moment with a selfie!", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))),
                 ],
               ),
               _imageButton('assets/family_mode_button.png', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FamilyModeScreen()))),
@@ -133,16 +124,13 @@ class _HomeScreenState extends State<HomeScreen> {
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset(asset, fit: BoxFit.contain, height: height, width: double.infinity),
-        ),
+        child: ClipRRect(borderRadius: BorderRadius.circular(20), child: Image.asset(asset, fit: BoxFit.contain, height: height, width: double.infinity)),
       ),
     );
   }
 }
 
-// ====================== CATEGORY SCREEN (Real Data + Radius Zoom) ======================
+// ====================== CATEGORY SCREEN ======================
 class CategoryScreen extends StatefulWidget {
   final String title;
   final Color color;
@@ -264,31 +252,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     if (available) _speech.listen(onResult: (result) => setState(() => _searchController.text = result.recognizedWords));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final filtered = _getFilteredPlaces();
-
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title), backgroundColor: widget.color),
-      body: Scrollbar(
-        thumbVisibility: true,
-        child: Column(
-          children: [
-            Padding(padding: const EdgeInsets.all(16), child: Row(children: [Expanded(child: TextField(controller: _searchController, decoration: const InputDecoration(hintText: "Search deals or speak address...", border: OutlineInputBorder()))), IconButton(icon: const Icon(Icons.mic, color: Color(0xFF00D4FF)), onPressed: _startListening)])),
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: ["1 mile", "5 miles", "10 miles"].map((r) => ChoiceChip(label: Text(r), selected: selectedRadius == r, onSelected: (_) { setState(() => selectedRadius = r); _updateMapZoom(); }).toList())),
-            Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 8), child: Text("Showing ${widget.title} near you (${filtered.length} found)", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00D4FF)))),
-            Expanded(flex: 2, child: isLoading ? const Center(child: CircularProgressIndicator()) : filtered.isEmpty ? const Center(child: Text("No matching places found.\nTry a larger radius.", textAlign: TextAlign.center)) : ListView.builder(itemCount: filtered.length, itemBuilder: (context, index) {
-              final p = filtered[index];
-              final dist = userLocation != null ? _calculateDistance(userLocation!, p['position'] as LatLng) : 0.0;
-              return ListTile(leading: const Icon(Icons.local_offer, color: Color(0xFF00D4FF)), title: Text(p['name']), subtitle: Text("${p['address']} • ${dist.toStringAsFixed(1)} mi"), onTap: () => _showPlaceDetails(p));
-            })),
-            Expanded(flex: 3, child: GoogleMap(initialCameraPosition: CameraPosition(target: userLocation ?? const LatLng(29.7604, -95.3698), zoom: 14), myLocationEnabled: true, myLocationButtonEnabled: true, scrollGesturesEnabled: false, zoomGesturesEnabled: true, markers: _getMapMarkers(), onMapCreated: (controller) => mapController = controller)),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showPlaceDetails(Map<String, dynamic> place) {
     final dist = userLocation != null ? _calculateDistance(userLocation!, place['position'] as LatLng) : 0.0;
     showDialog(context: context, builder: (context) => AlertDialog(
@@ -300,6 +263,53 @@ class _CategoryScreenState extends State<CategoryScreen> {
         launchUrl(Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng"));
       })],
     ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filtered = _getFilteredPlaces();
+
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title), backgroundColor: widget.color),
+      body: Scrollbar(
+        thumbVisibility: true,
+        child: Column(
+          children: [
+            Padding(padding: const EdgeInsets.all(16), child: Row(children: [Expanded(child: TextField(controller: _searchController, decoration: const InputDecoration(hintText: "Search deals or speak address...", border: OutlineInputBorder()))), IconButton(icon: const Icon(Icons.mic, color: Color(0xFF00D4FF)), onPressed: _startListening)])),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: ["1 mile", "5 miles", "10 miles"].map((r) => ChoiceChip(
+                  label: Text(r),
+                  selected: selectedRadius == r,
+                  onSelected: (_) {
+                    setState(() => selectedRadius = r);
+                    _updateMapZoom();
+                  },
+                  selectedColor: widget.color,
+                )).toList(),
+              ),
+            ),
+            Padding(padding: const EdgeInsets.fromLTRB(16, 8, 16, 8), child: Text("Showing ${widget.title} near you (${filtered.length} found)", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00D4FF)))),
+            Expanded(flex: 2, child: isLoading ? const Center(child: CircularProgressIndicator()) : filtered.isEmpty ? const Center(child: Text("No matching places found.\nTry a larger radius.", textAlign: TextAlign.center)) : ListView.builder(itemCount: filtered.length, itemBuilder: (context, index) {
+              final p = filtered[index];
+              final dist = userLocation != null ? _calculateDistance(userLocation!, p['position'] as LatLng) : 0.0;
+              return ListTile(leading: const Icon(Icons.local_offer, color: Color(0xFF00D4FF)), title: Text(p['name']), subtitle: Text("${p['address']} • ${dist.toStringAsFixed(1)} mi"), onTap: () => _showPlaceDetails(p));
+            })),
+            Expanded(flex: 3, child: GoogleMap(
+              initialCameraPosition: CameraPosition(target: userLocation ?? const LatLng(29.7604, -95.3698), zoom: 14),
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              scrollGesturesEnabled: false,
+              zoomGesturesEnabled: true,
+              markers: _getMapMarkers(),
+              onMapCreated: (controller) => mapController = controller,
+            )),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
