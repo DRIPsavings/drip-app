@@ -1,56 +1,44 @@
-name: Flutter Android Build
+name: Flutter Android Build (Clean)
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  workflow_dispatch:   
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup Java 17
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
-          cache: 'gradle'
+          java-version: '21'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.41.x'
+          flutter-version: '3.x'
           channel: 'stable'
-          cache: true
 
-      - name: Cache Gradle & Android SDK
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            /usr/local/lib/android/sdk
-          key: gradle-android-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-android-${{ runner.os }}-
-
-      - name: Accept licenses & Install NDK
+      - name: 🔥 Force Clean Build (Clear All Caches)
         run: |
-          echo "y" | flutter doctor --android-licenses
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973" --sdk_root=$ANDROID_HOME || true
+          flutter clean
+          rm -rf build/ .dart_tool/ pubspec.lock android/.gradle android/app/build ~/.gradle ~/.pub-cache
+          flutter pub get
 
-      - name: Flutter Pub Get
-        run: flutter pub get
+      - name: Accept Android licenses
+        run: yes | flutter doctor --android-licenses || true
 
-      - name: Build Debug APK
-        run: flutter build apk --debug --verbose
+      - name: Build Release APK
+        run: flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: drip-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
