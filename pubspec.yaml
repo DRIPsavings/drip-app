@@ -1,7 +1,7 @@
 name: drip
 description: "DRIP — Real Drink Specials Near You."
 publish_to: 'none'
-version: 1.0.6+7   # ← Increased for fresh build
+version: 1.0.7+8   # ← Bumped for fresh build
 
 environment:
   sdk: '>=3.2.0 <4.0.0'

@@ -40,25 +40,44 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final AudioPlayer _greetingPlayer = AudioPlayer();
+
   @override
   void initState() {
     super.initState();
+
     Timer(const Duration(seconds: 3), () async {
       final prefs = await SharedPreferences.getInstance();
       final bool isFirstLaunch = prefs.getBool('first_launch') ?? true;
       final String? savedVoice = prefs.getString('greeting_voice');
 
       if (isFirstLaunch) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const GreetingSelectionScreen()));
+        if (mounted) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const GreetingSelectionScreen()));
+        }
       } else if (savedVoice != null) {
-        final player = AudioPlayer();
+        // Start greeting 1 second after splash opens
         await Future.delayed(const Duration(seconds: 1));
-        await player.play(AssetSource('greetings/$savedVoice'));
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+        try {
+          await _greetingPlayer.play(AssetSource('greetings/$savedVoice'));
+        } catch (e) {
+          debugPrint('Greeting playback error: $e');
+        }
+        if (mounted) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+        }
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+        if (mounted) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+        }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    // Do NOT dispose the player here — we want greeting to continue on HomeScreen
+    super.dispose();
   }
 
   @override
@@ -194,6 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final AudioPlayer _player = AudioPlayer();
 
   Future<void> playSound(String file) async {
+    await _player.stop(); // Stop any previous sound (including greeting if wanted)
     await _player.play(AssetSource(file));
   }
 
