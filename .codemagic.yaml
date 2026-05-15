@@ -1,0 +1,26 @@
+workflows:
+  drip-full-clean-build:
+    name: DRIP - Full Clean Build
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      xcode: latest
+    scripts:
+      - name: Wipe ALL caches & start fresh
+        script: |
+          echo "🔥 Wiping EVERY cache..."
+          rm -rf build/ .dart_tool/ pubspec.lock android/.gradle android/app/build ~/.gradle ~/.pub-cache
+          flutter clean
+          flutter pub get
+          echo "✅ All caches cleared - forcing fresh build"
+      - name: Accept licenses & Build APK
+        script: |
+          yes | flutter doctor --android-licenses || true
+          flutter build apk --release --no-tree-shake-icons
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
+    publishing:
+      email:
+        recipients:
+          - YOUR_EMAIL_territorysales@hotmail.com   # ← Change this to your real email
