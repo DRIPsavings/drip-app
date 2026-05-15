@@ -1,9 +1,9 @@
-name: Flutter Android Build (Clean)
+name: DRIP - Nuclear Clean Build
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   
+  workflow_dispatch:   # Allows manual trigger
 
 jobs:
   build:
@@ -25,16 +25,21 @@ jobs:
           flutter-version: '3.x'
           channel: 'stable'
 
-      - name: 🔥 Force Clean Build (Clear All Caches)
+      - name: 🔥 NUCLEAR CACHE WIPE - Flutter will shit its pants
         run: |
+          echo "=== FORCING COMPLETE CLEAN ==="
           flutter clean
-          rm -rf build/ .dart_tool/ pubspec.lock android/.gradle android/app/build ~/.gradle ~/.pub-cache
-          flutter pub get
+          rm -rf build/ .dart_tool/ pubspec.lock android/.gradle android/app/build android/build
+          rm -rf ~/.gradle ~/.pub-cache ~/.dartServer
+          echo "All known Flutter/Gradle caches deleted"
 
-      - name: Accept Android licenses
+      - name: Fresh pub get
+        run: flutter pub get
+
+      - name: Accept licenses
         run: yes | flutter doctor --android-licenses || true
 
-      - name: Build Release APK
+      - name: Build Release APK (Fresh every time)
         run: flutter build apk --release
 
       - name: Upload APK
