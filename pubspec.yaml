@@ -1,7 +1,9 @@
 name: drip
 description: "DRIP — Real Drink Specials Near You."
 publish_to: 'none'
-version: 1.0.10+11   # ← BIG bump so Codemagic treats it as brand new
+
+# Version: Increase this every time you want a fresh build
+version: 1.0.9+10
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -22,8 +24,13 @@ flutter:
   uses-material-design: true
 
   assets:
+    # Splash screen
     - assets/splash.png
+    
+    # Greeting voice files (must match your folder structure)
     - assets/greetings/
+    
+    # Home screen buttons
     - assets/smoothie_button.png
     - assets/coffee_button.png
     - assets/party_button.png
